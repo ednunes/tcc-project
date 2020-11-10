@@ -18,7 +18,7 @@ class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
 
         if event.type == 'TIMER':
             try:
-                self.mg.real_time_capture()
+                self.mg.main()
             except Exception as e:
                 self.cancel(context)
                 print('DEU RUIM no TRY', str(e))

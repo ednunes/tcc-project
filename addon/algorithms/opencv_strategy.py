@@ -35,7 +35,7 @@ class OpenCVStrategy(LandmarksDetectionStrategy):
             cv2.putText(frame, str(label), (round(x),round(y)), font, fontScale, color, thickness, cv2.LINE_AA, False)
             label += 1
 
-    def draw_face_landmarks_circles(self, frame, shape):
+    def draw_face_landmarks(self, frame, shape):
         for (x, y) in shape:
             cv2.circle(frame, (round(x), round(y)), 2, (0, 255, 255), -1)
 
@@ -55,7 +55,7 @@ class OpenCVStrategy(LandmarksDetectionStrategy):
 
             shape = landmarks[0][0]
 
-            self.draw_face_landmarks_numbers(frame, shape)
+            self.draw_face_landmarks(frame, shape)
         
         self.draw_detected_faces(frame, faces)
         

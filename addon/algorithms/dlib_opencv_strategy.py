@@ -4,6 +4,7 @@ import argparse
 import imutils
 import dlib
 import cv2
+
 from addon.algorithms.strategy import LandmarksDetectionStrategy
 from typing import List
 
@@ -26,6 +27,9 @@ class DlibOpenCVStrategy(LandmarksDetectionStrategy):
         self.detector = dlib.get_frontal_face_detector()
         self.predictor = dlib.shape_predictor(self.SHAPE_PREDICTOR)
 
+    def draw_face_landmarks(self, image, shape) -> None:
+        for (x, y) in shape:
+            cv2.circle(image, (round(x), round(y)), 2, (0, 255, 255), -1)
 
     def get_face_landmarks(self, frame: List) -> List:
         # load the input image, resize it, and convert it to grayscale
@@ -49,16 +53,13 @@ class DlibOpenCVStrategy(LandmarksDetectionStrategy):
                 # [i.e., (x, y, w, h)], then draw the face bounding box
                 (x, y, w, h) = face_utils.rect_to_bb(rect)
                 cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                
 
                 # show the face number
                 cv2.putText(image, "Face #{}".format(i + 1), (x - 10, y - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-                # loop over the (x, y)-coordinates for the facial landmarks
-                # and draw them on the image
-                for (x, y) in shape:
-                        cv2.circle(image, (x, y), 1, (0, 0, 255), -1)
+                self.draw_face_landmarks(image, shape)
 
-        return (image, shape)
+
+        return shape
 

@@ -1,25 +1,22 @@
-# TODO Está dando um warning
-# exit_button_window = cv2.getWindowProperty(window_name, cv2.WND_PROP_VISIBLE) < 1
-# or exit_button_window
-
 import bpy
 import cv2
 import json
 import codecs
 import numpy as np
-#import time
 
 from addon.model_animation import ModelAnimation
 from addon.algorithms.strategy import LandmarksDetectionStrategy
 
 from abc import ABC, abstractmethod
+from bpy.app.handlers import persistent
+
 
 class FaceCapture():
     WINDOW_NAME = "Captured frame"
     shapes = []
     frames = []
 
-    model_animation = ModelAnimation()
+    model_animation = None 
 
     # TODO alterar _cap para nome mais significativo
     _video_capture = None
@@ -38,6 +35,10 @@ class FaceCapture():
         'landmarks_model_path': "/home/eduardonunes/workspace/org_tcc/GSOC2017/data/lbfmodel.yaml"
     }
 
+    # @persistent
+    # def get_model_animation(self):
+    #     self.model_animation = ModelAnimation()
+
     def __init__(self,
             landmarks_detection_strategy: LandmarksDetectionStrategy,
             settings={}) -> None:
@@ -45,8 +46,10 @@ class FaceCapture():
         self._recording = False 
         if len(settings) != 0:
             self.settings = settings
+        # bpy.app.handlers.load_post.append(self.get_model_animation)
+        self.model_animation = ModelAnimation()
 
-    def init_camera(self):
+    def init_camera(self) -> None:
         device_option = self.settings['device_option']
 
         if device_option.isdigit():
@@ -57,9 +60,7 @@ class FaceCapture():
         self._video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, self.settings['height'])
         self._video_capture.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
-        # time.sleep(1.0)
-
-    def close_camera(self):
+    def close_camera(self) -> None:
         if self._video_capture != None:
             self._video_capture.release()
             self._video_capture = None
@@ -124,7 +125,7 @@ class FaceCapture():
             video_output = cv2.VideoWriter(
                 output_video,
                 cv2.VideoWriter_fourcc(*'MJPG'),
-                10,
+                60,
                 video_dimensions 
             )
 
@@ -164,7 +165,7 @@ class FaceCapture():
         cv2.putText(frame, capture_state, (10, 30), font,
                     font_scale, color, thickness, cv2.LINE_AA, False)
 
-    def real_time_capture(self):
+    def main(self):
         if not self._video_capture is None:
             _, frame = self._video_capture.read()
 

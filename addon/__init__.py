@@ -18,10 +18,6 @@ import os
 import bpy
 import importlib
 
-blend_dir = os.path.dirname(bpy.data.filepath)
-if blend_dir not in sys.path:
-   sys.path.append(blend_dir)
-
 from addon.blender_interface import settings_properties
 from addon.blender_interface import panel_blender
 from addon.blender_interface import operator_blender
@@ -56,3 +52,7 @@ def unregister():
  
 if __name__ == "__main__":
     register()
+    blend_dir = os.path.dirname(bpy.data.filepath)
+    if blend_dir not in sys.path:
+       sys.path.append(blend_dir)
+

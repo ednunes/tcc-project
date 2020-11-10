@@ -3,7 +3,6 @@ import cv2
 import numpy
 
 class ModelAnimation():
-    # Webcam resolution:
     def __init__(self, dimensions=(640, 480)):
         self.width = dimensions[0]
         self.height = dimensions[1]
