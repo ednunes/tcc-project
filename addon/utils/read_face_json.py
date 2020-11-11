@@ -17,7 +17,7 @@ while True:
         break
     else:
         for shape in data['shapes']:
-            frame = np.zeros((500,500,3), np.uint8)
+            frame = np.zeros((500, 500, 3), np.uint8)
             for (x, y) in shape:
                 cv2.circle(frame, (round(x), round(y)), 2, (0, 255, 255), -1)
 

@@ -62,4 +62,3 @@ class DlibOpenCVStrategy(LandmarksDetectionStrategy):
 
 
         return shape
-

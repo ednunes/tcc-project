@@ -1,19 +1,16 @@
 import cv2
 
-def returnCameraIndexes():
+
+def returnCameraIndexes() -> list:
     # checks the first 10 indexes.
-    index = 0
-    arr = []
-    i = 10
-    while i > 0:
-        cap = cv2.VideoCapture(index)
+    a = []
+    for i in range(10):
+        cap = cv2.VideoCapture(i)
         if cap.read()[0]:
-            arr.append(index)
+            a.append(i)
             cap.release()
-        index += 1
-        i -= 1
-    print('ARR', arr)
-    return arr
+    return a
+
 
 if __name__ == "__main__":
     returnCameraIndexes()

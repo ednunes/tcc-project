@@ -1,17 +1,17 @@
 import bpy
 import codecs
 import json
-import time
 import numpy as np
 from addon.model_animation import ModelAnimation
+
 
 class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
     bl_label = "Animate from json data"
     bl_idname = "addonname.animate_model_operator"
-    
-    model_animation = None 
-    shape_index = 0 
-    shapes_len = 0 
+
+    model_animation = None
+    shape_index = 0
+    shapes_len = 0
 
     data = {}
     _timer = None
@@ -29,7 +29,7 @@ class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
         wm.modal_handler_add(self)
 
         return {'FINISHED'}
-    
+
     def modal(self, context, event):
         if self.shape_index == (self.shapes_len - 1):
             return {'CANCELLED'}
@@ -41,13 +41,12 @@ class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
 
         self.model_animation.set_animation(nd_shape)
         self.shape_index += 1
-        
-        return {'RUNNING_MODAL'}
 
+        return {'RUNNING_MODAL'}
 
     def invoke(self, context, event):
         settings = context.scene.settings_properties
-        settings.input_json_path= bpy.path.abspath(
+        settings.input_json_path = bpy.path.abspath(
             settings.input_json_path
         )
 

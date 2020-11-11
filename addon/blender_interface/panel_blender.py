@@ -1,5 +1,6 @@
 import bpy
 
+
 class ADDONNAME_PT_main_panel:
     bl_label = "Face capture panel"
     bl_idname = "ADDONNAME_PT_main_panel"
@@ -11,7 +12,9 @@ class ADDONNAME_PT_main_panel:
     def poll(cls, context):
         return (context.object is not None)
 
-class ADDONNAME_PT_subpanel_animate_model(ADDONNAME_PT_main_panel, bpy.types.Panel):
+
+class ADDONNAME_PT_subpanel_animate_model(
+        ADDONNAME_PT_main_panel, bpy.types.Panel):
     bl_idname = "ADDONNAME_PT_subpanel_animate_model"
     bl_label = "Animate from data"
 
@@ -24,7 +27,9 @@ class ADDONNAME_PT_subpanel_animate_model(ADDONNAME_PT_main_panel, bpy.types.Pan
         layout.operator("addonname.animate_model_operator",
                         icon='RENDER_ANIMATION')
 
-class ADDONNAME_PT_subpanel_face_capture(ADDONNAME_PT_main_panel, bpy.types.Panel):
+
+class ADDONNAME_PT_subpanel_face_capture(
+        ADDONNAME_PT_main_panel, bpy.types.Panel):
     bl_idname = "ADDONNAME_PT_subpanel_face_capture"
     bl_label = "Face capture"
 
@@ -62,7 +67,6 @@ class ADDONNAME_PT_subpanel_face_capture(ADDONNAME_PT_main_panel, bpy.types.Pane
         device_selection_layout.prop(settings, 'want_to_export_json')
         if settings.want_to_export_json:
             device_selection_layout.prop(settings, 'landmarks_json_export')
-
 
         landmark_layout = layout.box()
         landmark_layout.label(text="Landmark algorithms settings")

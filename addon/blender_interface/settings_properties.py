@@ -18,8 +18,8 @@ def get_devices(self, context) -> List:
 
 class SettingsProperties(bpy.types.PropertyGroup):
     window_width: bpy.props.IntProperty(
-        name='Width:',
-        description='Window display width',
+        name="Width:",
+        description="Window display width",
         default=DEFAULT_WIDTH,
         soft_min=0
     )
@@ -86,7 +86,7 @@ class SettingsProperties(bpy.types.PropertyGroup):
 
     input_json_path: bpy.props.StringProperty(
         name="Input json path",
-        description="json data used to animate 3D model. Ex: /home/folder/data.json",
+        description="Json data used to animate 3D model. Ex: /home/folder/data.json",
         default="",
         subtype="FILE_PATH"
     )
