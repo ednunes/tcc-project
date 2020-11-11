@@ -52,13 +52,13 @@ class DlibOpenCVStrategy(LandmarksDetectionStrategy):
                 # convert dlib's rectangle to a OpenCV-style bounding box
                 # [i.e., (x, y, w, h)], then draw the face bounding box
                 (x, y, w, h) = face_utils.rect_to_bb(rect)
-                cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
                 # show the face number
-                cv2.putText(image, "Face #{}".format(i + 1), (x - 10, y - 10),
+                cv2.putText(frame, "Face #{}".format(i + 1), (x - 10, y - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-                self.draw_face_landmarks(image, shape)
+                self.draw_face_landmarks(frame, shape)
 
 
         return shape

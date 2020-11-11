@@ -84,6 +84,13 @@ class SettingsProperties(bpy.types.PropertyGroup):
         subtype="FILE_PATH"
     )
 
+    input_json_path: bpy.props.StringProperty(
+        name="Input json path",
+        description="json data used to animate 3D model. Ex: /home/folder/data.json",
+        default="",
+        subtype="FILE_PATH"
+    )
+
     # TODO fazer com que a lista de items seja pego atraves de um arquivo de conf
     landmarks_algorithm_option: bpy.props.EnumProperty(
         name="Algorithm",

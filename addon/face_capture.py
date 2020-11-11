@@ -32,7 +32,7 @@ class FaceCapture():
         'input_video': '',
         'landmarks_json_export': '',
         'landmarks_algorithm_option': 'opencv',
-        'landmarks_model_path': "/home/eduardonunes/workspace/org_tcc/GSOC2017/data/lbfmodel.yaml"
+        'landmarks_model_path': "../models_prediction/lbfmodel.yaml"
     }
 
     # @persistent
@@ -166,27 +166,32 @@ class FaceCapture():
                     font_scale, color, thickness, cv2.LINE_AA, False)
 
     def main(self):
+        no_errors = True
         if not self._video_capture is None:
             _, frame = self._video_capture.read()
+            if not frame is None:
+                if self.settings['want_to_record']:
+                    self.frames.append(frame)
 
-            if self.settings['want_to_record']:
-                self.frames.append(frame)
+                if self.settings['capture_mode'] == 'video':
+                    frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+                
+                frame_clone = frame.copy()
+                shape = self.get_face_landmarks(frame_clone)
 
-            if self.settings['capture_mode'] == 'video':
-                frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
-            
-            frame_clone = frame.copy()
-            shape = self.get_face_landmarks(frame_clone)
+                if not shape is None:
+                    self.model_animation.set_animation(shape)
+                    if (self.settings['want_to_export_json'] and 
+                        (self.recording or self.settings['capture_mode'] == 'video')):
+                        self.shapes.append(shape)
 
-            if not shape is None:
-                self.model_animation.set_animation(shape)
-                if self.recording and self.settings['want_to_export_json']:
-                    self.shapes.append(shape)
+                key_pressed = cv2.waitKey(1)
 
-            key_pressed = cv2.waitKey(1)
+                self.show_mode(frame_clone, self.recording)
 
-            self.show_mode(frame_clone, self.recording)
+                cv2.imshow(self.WINDOW_NAME, frame_clone)
+            else:
+                no_errors = False
 
-            cv2.imshow(self.WINDOW_NAME, frame_clone)
-
+        return no_errors
 

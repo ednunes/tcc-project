@@ -1,12 +1,32 @@
 import bpy
 
-
-class ADDONNAME_PT_main_panel(bpy.types.Panel):
+class ADDONNAME_PT_main_panel:
     bl_label = "Face capture panel"
     bl_idname = "ADDONNAME_PT_main_panel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = "ADDONNAME Addon"
+
+    @classmethod
+    def poll(cls, context):
+        return (context.object is not None)
+
+class ADDONNAME_PT_subpanel_animate_model(ADDONNAME_PT_main_panel, bpy.types.Panel):
+    bl_idname = "ADDONNAME_PT_subpanel_animate_model"
+    bl_label = "Animate from data"
+
+    def draw(self, context):
+        layout = self.layout
+        scene = context.scene
+        settings = scene.settings_properties
+        layout.prop(settings, 'input_json_path', text="Input json")
+
+        layout.operator("addonname.animate_model_operator",
+                        icon='RENDER_ANIMATION')
+
+class ADDONNAME_PT_subpanel_face_capture(ADDONNAME_PT_main_panel, bpy.types.Panel):
+    bl_idname = "ADDONNAME_PT_subpanel_face_capture"
+    bl_label = "Face capture"
 
     def draw(self, context):
         layout = self.layout
@@ -35,13 +55,14 @@ class ADDONNAME_PT_main_panel(bpy.types.Panel):
             if settings.want_to_record:
                 device_selection_layout.prop(settings, 'output_video')
 
-            device_selection_layout.prop(settings, 'want_to_export_json')
-            if settings.want_to_export_json:
-                device_selection_layout.prop(settings, 'landmarks_json_export')
-
         elif settings.capture_mode == 'video':
             device_selection_layout.prop(
                 settings, 'input_video', text="Video path")
+
+        device_selection_layout.prop(settings, 'want_to_export_json')
+        if settings.want_to_export_json:
+            device_selection_layout.prop(settings, 'landmarks_json_export')
+
 
         landmark_layout = layout.box()
         landmark_layout.label(text="Landmark algorithms settings")

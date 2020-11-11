@@ -9,6 +9,7 @@ class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
     
     _timer = None
     stop = False
+    want_to_record_json_data_from_video = False
     mg = None
     
     def modal(self, context, event):
@@ -18,7 +19,9 @@ class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
 
         if event.type == 'TIMER':
             try:
-                self.mg.main()
+                no_errors = self.mg.main()
+                if not no_errors:
+                    raise NameError('Frame is None')
             except Exception as e:
                 self.cancel(context)
                 print('DEU RUIM no TRY', str(e))
@@ -36,18 +39,25 @@ class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
             bpy.ops.screen.animation_cancel(restore_frame=False)
         
     def execute(self, context):
-        bpy.app.handlers.frame_change_pre.append(self.stop_playback)
+        #bpy.app.handlers.frame_change_pre.append(self.stop_playback)
 
         self.mg = manager_animation(context.scene.settings_properties)
+        self.want_to_record_json_data_from_video = (
+            context.scene.settings_properties.want_to_export_json and 
+            context.scene.settings_properties.capture_mode == 'video'
+        )
         self.mg.init_camera()
 
         wm = context.window_manager
-        self._timer = wm.event_timer_add(0.01, window=context.window)
+        self._timer = wm.event_timer_add(0.016, window=context.window)
         wm.modal_handler_add(self)
 
         return {'RUNNING_MODAL'}
 
     def cancel(self, context):
+        if self.want_to_record_json_data_from_video:
+            self.mg.save_data()
+
         wm = context.window_manager
         wm.event_timer_remove(self._timer)
         self.mg.close_camera()

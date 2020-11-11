@@ -2,6 +2,14 @@ from addon.face_capture import FaceCapture
 from addon.algorithms import OpenCVStrategy 
 from addon.algorithms import DlibOpenCVStrategy
 
+def get_landmarks_algorithm_option(option, params):
+    options = {
+        'opencv': OpenCVStrategy(*params),
+        'dlib': DlibOpenCVStrategy(*params),
+    }
+
+    return options[option]
+
 def manager_animation(settings):
     addon_settings = {
         'width': settings.window_width,
@@ -18,12 +26,18 @@ def manager_animation(settings):
     }
 
     print('ADDON SETTINGS', addon_settings)
-    
+
+    landmarks_algorithm_params = (
+        (addon_settings['width'], addon_settings['height']),
+        addon_settings['landmarks_model_path']
+    )
+
     face_capture = FaceCapture(
-        DlibOpenCVStrategy(
-            (addon_settings['width'], addon_settings['height']),
-            addon_settings['landmarks_model_path']),
+        get_landmarks_algorithm_option(
+            addon_settings['landmarks_algorithm_option'],
+            landmarks_algorithm_params
+        ),
         addon_settings
     )
-    
+
     return face_capture 
