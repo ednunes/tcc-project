@@ -1,5 +1,5 @@
 import bpy
-from addon.manager_animation import manager_animation
+from addon.manage_animation import manage_animation
 
 
 class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
@@ -9,12 +9,11 @@ class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
     bl_label = "OpenCV Animation Operator"
 
     _timer = None
-    stop = False
     want_to_record_json_data_from_video = False
     mg = None
 
     def modal(self, context, event):
-        if (event.type in {'RIGHTMOUSE', 'ESC', 'Q'}) or self.stop is True:
+        if event.type in {'RIGHTMOUSE', 'ESC', 'Q'}:
             self.cancel(context)
             return {'CANCELLED'}
 
@@ -26,7 +25,7 @@ class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
                     raise NameError('Frame is None')
             except Exception as e:
                 self.cancel(context)
-                print('DEU RUIM no TRY', str(e))
+                print('ERROR', str(e))
                 return {'CANCELLED'}
 
         if event.type == 'R' and event.value == 'PRESS':
@@ -43,7 +42,7 @@ class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
     def execute(self, context):
         # bpy.app.handlers.frame_change_pre.append(self.stop_playback)
 
-        self.mg = manager_animation(context.scene.settings_properties)
+        self.mg = manage_animation(context.scene.settings_properties)
         self.want_to_record_json_data_from_video = (
             context.scene.settings_properties.want_to_export_json and
             context.scene.settings_properties.capture_mode == 'video'
@@ -51,7 +50,8 @@ class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
         self.mg.init_camera()
 
         wm = context.window_manager
-        self._timer = wm.event_timer_add(0.016, window=context.window)
+        ''' 0.033 = 30 fps '''
+        self._timer = wm.event_timer_add(0.033, window=context.window)
         wm.modal_handler_add(self)
 
         return {'RUNNING_MODAL'}
@@ -60,6 +60,5 @@ class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
         if self.want_to_record_json_data_from_video:
             self.mg.save_data()
 
-        wm = context.window_manager
-        wm.event_timer_remove(self._timer)
+        context.window_manager.event_timer_remove(self._timer)
         self.mg.close_camera()

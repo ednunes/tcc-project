@@ -12,7 +12,7 @@ def get_landmarks_algorithm_option(option, params):
     return options[option]
 
 
-def manager_animation(settings):
+def manage_animation(settings):
     addon_settings = {
         "width": settings.window_width,
         "height": settings.window_height,

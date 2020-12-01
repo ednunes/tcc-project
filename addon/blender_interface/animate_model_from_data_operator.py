@@ -25,7 +25,7 @@ class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
         self.model_animation = ModelAnimation()
 
         wm = context.window_manager
-        self._timer = wm.event_timer_add(0.016, window=context.window)
+        self._timer = wm.event_timer_add(0.033, window=context.window)
         wm.modal_handler_add(self)
 
         return {'FINISHED'}
@@ -53,6 +53,7 @@ class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
         json_data = codecs.open(
             settings.input_json_path, 'r', encoding='utf-8'
         ).read()
+
         self.data = json.loads(json_data)
         self.shapes_len = len(self.data['shapes'])
 
