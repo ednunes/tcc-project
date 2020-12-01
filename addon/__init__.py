@@ -33,7 +33,7 @@ CLASSES = [
     settings_properties.SettingsProperties,
     panel_blender.ADDONNAME_PT_subpanel_face_capture,
     panel_blender.ADDONNAME_PT_subpanel_animate_model,
-    operator_blender.ADDONNAME_OT_fcoperator,
+    face_capture_operator.ADDONNAME_OT_fcoperator,
     animate_model_from_data_operator.ADDONNAME_OT_animate_model_operator,
     face_animation_operator.ADDONNAME_OT_face_animation_operator
 ]
@@ -54,9 +54,9 @@ def unregister():
 
     del bpy.types.Scene.settings_properties
 
-
 if __name__ == "__main__":
     register()
-    blend_dir = os.path.dirname(bpy.data.filepath)
-    if blend_dir not in sys.path:
-        sys.path.append(blend_dir)
+    # blend_dir = os.path.dirname(bpy.data.filepath)
+    addon_path = os.path.expanduser("~/.config/blender/2.90/scripts/addons/addon")
+    if addon_path not in sys.path:
+       sys.path.append(addon_path)
