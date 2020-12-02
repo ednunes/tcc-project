@@ -1,1 +1,1 @@
-import .test_algorithm
+from .import_data import import_data

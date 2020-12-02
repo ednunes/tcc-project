@@ -1,8 +1,8 @@
 import bpy
-import codecs
-import json
+import time
 import numpy as np
 from addon.model_animation import ModelAnimation
+from addon.utils.import_data import import_data 
 
 
 class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
@@ -14,6 +14,7 @@ class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
     shapes_len = 0
 
     data = {}
+    fps = 30
     _timer = None
 
     def stop_playback(self, scene):
@@ -25,22 +26,24 @@ class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
         self.model_animation = ModelAnimation()
 
         wm = context.window_manager
-        self._timer = wm.event_timer_add(0.033, window=context.window)
+        self._timer = wm.event_timer_add((1/self.fps), window=context.window)
         wm.modal_handler_add(self)
 
         return {'FINISHED'}
 
     def modal(self, context, event):
+        time_start = time.time()
         if self.shape_index == (self.shapes_len - 1):
             return {'CANCELLED'}
 
         nd_shape = np.asarray(
-            self.data['shapes'][self.shape_index],
+            self.data[self.shape_index],
             dtype=np.float32
         )
 
         self.model_animation.set_animation(nd_shape)
         self.shape_index += 1
+        print("TIME: %.4f sec" % (time.time() - time_start))
 
         return {'RUNNING_MODAL'}
 
@@ -49,13 +52,9 @@ class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
         settings.input_data_path = bpy.path.abspath(
             settings.input_data_path
         )
-
-        data = codecs.open(
-            settings.input_data_path, 'r', encoding='utf-8'
-        ).read()
-
-        self.data = json.loads(data)
-        self.shapes_len = len(self.data['shapes'])
+        self.fps = settings.number_of_fps
+        self.data = import_data(settings.input_data_path)
+        self.shapes_len = len(self.data)
 
         self.execute(context)
         return {'RUNNING_MODAL'}

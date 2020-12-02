@@ -89,6 +89,12 @@ class SettingsProperties(bpy.types.PropertyGroup):
         default="",
         subtype="FILE_PATH"
     )
+    number_of_fps: bpy.props.IntProperty(
+        name="Number of fps:",
+        description="Number of frames per second",
+        default=30,
+        soft_min=1
+    )
 
     # TODO fazer com que a lista de items seja pego atraves de um arquivo de conf
     landmarks_algorithm_option: bpy.props.EnumProperty(

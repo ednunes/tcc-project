@@ -6,22 +6,30 @@ addon_path = os.path.expanduser("/home/eduardonunes/workspace/project_tcc/addon"
 if addon_path not in sys.path:
    sys.path.append(addon_path)
 
-from algorithms import DlibOpenCVStrategy
+from algorithms import OpenCVStrategy
+
+WIDTH = 640
+HEIGHT = 480 
 
 # Init camera
 video_capture = cv2.VideoCapture(0)
 video_capture.set(
     cv2.CAP_PROP_FRAME_WIDTH,
-    640
+    WIDTH
 )
 video_capture.set(
     cv2.CAP_PROP_FRAME_HEIGHT,
-    480
+    HEIGHT
 )
 video_capture.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
+landmarks_algorithm_params = (
+    (WIDTH, HEIGHT),
+    "../../models_prediction/lbfmodel.yaml"
+)
+
 # Algorithm instance
-algorithm = DlibOpenCVStrategy()
+algorithm = OpenCVStrategy(*landmarks_algorithm_params)
 
 # Main loop
 while(video_capture is not None and video_capture.isOpened()):

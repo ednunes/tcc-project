@@ -23,6 +23,7 @@ class ADDONNAME_PT_subpanel_animate_model(
         scene = context.scene
         settings = scene.settings_properties
         layout.prop(settings, 'input_data_path', text="Input data")
+        layout.prop(settings, 'number_of_fps', text="Number of FPS")
 
         layout.operator("addonname.animate_model_operator",
                         icon='RENDER_ANIMATION')
