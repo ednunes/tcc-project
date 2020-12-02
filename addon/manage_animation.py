@@ -20,10 +20,10 @@ def manage_animation(settings):
         "output_video": settings.output_video,
         "capture_mode": settings.capture_mode,
         "want_to_record": settings.want_to_record,
+        "landmarks_export": settings.landmarks_export,
         "device_option": settings.capture_device_result,
-        "want_to_export_json": settings.want_to_export_json,
+        "want_to_export_data": settings.want_to_export_data,
         "landmarks_model_path": settings.landmarks_model_path,
-        "landmarks_json_export": settings.landmarks_json_export,
         "landmarks_algorithm_option": settings.landmarks_algorithm_option
     }
 

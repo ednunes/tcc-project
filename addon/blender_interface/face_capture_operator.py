@@ -24,8 +24,8 @@ class ADDONNAME_OT_fcoperator(bpy.types.Operator):
         settings = context.scene.settings_properties
         settings.landmarks_model_path = bpy.path.abspath(
             settings.landmarks_model_path)
-        settings.landmarks_json_export = bpy.path.abspath(
-            settings.landmarks_json_export)
+        settings.landmarks_export = bpy.path.abspath(
+            settings.landmarks_export)
         settings.output_video = bpy.path.abspath(settings.output_video)
 
         if settings.capture_mode == "camera":

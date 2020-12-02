@@ -34,9 +34,9 @@ class SettingsProperties(bpy.types.PropertyGroup):
         description="Option to record captured video",
         default=True
     )
-    want_to_export_json: bpy.props.BoolProperty(
-        name="Export landmarks in json file",
-        description="Option to export landmarks in json format",
+    want_to_export_data: bpy.props.BoolProperty(
+        name="Export landmarks in defined format",
+        description="Option to export landmarks in format",
         default=True
     )
     capture_device_result: bpy.props.StringProperty(
@@ -77,16 +77,15 @@ class SettingsProperties(bpy.types.PropertyGroup):
         default="",
         subtype="FILE_PATH"
     )
-    landmarks_json_export: bpy.props.StringProperty(
+    landmarks_export: bpy.props.StringProperty(
         name="Output landmarks",
-        description="Landmarks result in json format. Ex: /home/folder/data.json",
+        description="Landmarks result in defined export format. Ex: /home/folder/data.json",
         default="",
         subtype="FILE_PATH"
     )
-
-    input_json_path: bpy.props.StringProperty(
-        name="Input json path",
-        description="Json data used to animate 3D model. Ex: /home/folder/data.json",
+    input_data_path: bpy.props.StringProperty(
+        name="Input data path",
+        description="Data used to animate 3D model. Ex: /home/folder/data.json",
         default="",
         subtype="FILE_PATH"
     )

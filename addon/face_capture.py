@@ -1,5 +1,4 @@
 import cv2
-import json
 import codecs
 import numpy as np
 import time
@@ -23,10 +22,10 @@ class FaceCapture():
         "input_video": "",
         "output_video": "",
         "device_option": "0",
+        "landmarks_export": "",
         "want_to_record": False,
         "capture_mode": "camera",
-        "landmarks_json_export": "",
-        "want_to_export_json": False,
+        "want_to_export_data": False,
         "landmarks_algorithm_option": "opencv",
         "landmarks_model_path": "../models_prediction/lbfmodel.yaml"
     }
@@ -84,34 +83,6 @@ class FaceCapture():
     def get_face_landmarks(self, frame: np.ndarray) -> np.ndarray:
         return self._landmarks_detection_strategy.get_face_landmarks(frame)
 
-    def save_json_format(self,
-                         landmarks_json_file: str, shapes: np.ndarray) -> bool:
-        has_error = False
-        shapes_json = {
-            "shapes": [shape.tolist() for shape in shapes]
-        }
-
-        print("SAVING JSON...")
-
-        try:
-            json.dump(
-                shapes_json,
-                codecs.open(
-                    landmarks_json_file,
-                    "w",
-                    encoding="utf-8"
-                ),
-                separators=(",", ":"),
-                sort_keys=True,
-                indent=4
-            )
-            print("JSON SAVED SUCCESSFULLY!")
-        except Exception as e:
-            print("ERROR WHEN SAVING JSON:", e)
-            has_error = True
-
-        return has_error
-
     def save_video(self,
                    output_video: str,
                    video_dimensions: tuple,
@@ -134,9 +105,9 @@ class FaceCapture():
         print("VIDEO SAVED SUCCESSFULLY!")
 
     def save_data(self) -> None:
-        if self.settings["want_to_export_json"]:
-            self.save_json_format(
-                self.settings["landmarks_json_export"],
+        if self.settings["want_to_export_data"]:
+            self._landmarks_detection_strategy.save_landmarks(
+                self.settings["landmarks_export"],
                 self.shapes
             )
             self.shapes.clear()
@@ -169,7 +140,7 @@ class FaceCapture():
 
         if shape is not None:
             self.model_animation.set_animation(shape)
-            if self.settings["want_to_export_json"]:
+            if self.settings["want_to_export_data"]:
                 self.shapes.append(shape)
 
         cv2.waitKey(1)
@@ -185,7 +156,7 @@ class FaceCapture():
 
         if shape is not None:
             self.model_animation.set_animation(shape)
-            if self.settings["want_to_export_json"] and self.recording:
+            if self.settings["want_to_export_data"] and self.recording:
                 self.shapes.append(shape)
 
         cv2.waitKey(1)
@@ -193,6 +164,7 @@ class FaceCapture():
         cv2.imshow(self.WINDOW_NAME, frame_clone)
 
     def main(self) -> bool:
+        print('ENTROU AQUI NO NOVO')
         checked_frame = True
         if self._video_capture is not None:
             checked_frame, frame = self._video_capture.read()

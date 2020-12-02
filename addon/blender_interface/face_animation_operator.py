@@ -44,7 +44,7 @@ class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
 
         self.mg = manage_animation(context.scene.settings_properties)
         self.want_to_record_json_data_from_video = (
-            context.scene.settings_properties.want_to_export_json and
+            context.scene.settings_properties.want_to_export_data and
             context.scene.settings_properties.capture_mode == 'video'
         )
         self.mg.init_camera()

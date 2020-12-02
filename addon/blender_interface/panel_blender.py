@@ -22,7 +22,7 @@ class ADDONNAME_PT_subpanel_animate_model(
         layout = self.layout
         scene = context.scene
         settings = scene.settings_properties
-        layout.prop(settings, 'input_json_path', text="Input json")
+        layout.prop(settings, 'input_data_path', text="Input data")
 
         layout.operator("addonname.animate_model_operator",
                         icon='RENDER_ANIMATION')
@@ -64,9 +64,9 @@ class ADDONNAME_PT_subpanel_face_capture(
             device_selection_layout.prop(
                 settings, 'input_video', text="Video path")
 
-        device_selection_layout.prop(settings, 'want_to_export_json')
-        if settings.want_to_export_json:
-            device_selection_layout.prop(settings, 'landmarks_json_export')
+        device_selection_layout.prop(settings, 'want_to_export_data')
+        if settings.want_to_export_data:
+            device_selection_layout.prop(settings, 'landmarks_export')
 
         landmark_layout = layout.box()
         landmark_layout.label(text="Landmark algorithms settings")

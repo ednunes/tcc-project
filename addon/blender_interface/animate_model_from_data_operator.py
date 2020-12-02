@@ -6,7 +6,7 @@ from addon.model_animation import ModelAnimation
 
 
 class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
-    bl_label = "Animate from json data"
+    bl_label = "Animate from data"
     bl_idname = "addonname.animate_model_operator"
 
     model_animation = None
@@ -46,15 +46,15 @@ class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
 
     def invoke(self, context, event):
         settings = context.scene.settings_properties
-        settings.input_json_path = bpy.path.abspath(
-            settings.input_json_path
+        settings.input_data_path = bpy.path.abspath(
+            settings.input_data_path
         )
 
-        json_data = codecs.open(
-            settings.input_json_path, 'r', encoding='utf-8'
+        data = codecs.open(
+            settings.input_data_path, 'r', encoding='utf-8'
         ).read()
 
-        self.data = json.loads(json_data)
+        self.data = json.loads(data)
         self.shapes_len = len(self.data['shapes'])
 
         self.execute(context)
