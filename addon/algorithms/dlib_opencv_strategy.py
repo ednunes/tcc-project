@@ -5,7 +5,7 @@ import imutils
 import dlib
 import cv2
 
-from addon.algorithms.strategy import LandmarksDetectionStrategy
+from .strategy import LandmarksDetectionStrategy
 from typing import List
 
 

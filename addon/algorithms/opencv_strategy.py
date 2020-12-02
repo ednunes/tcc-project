@@ -1,7 +1,7 @@
 from typing import List
 import cv2
 import numpy
-from addon.algorithms.strategy import LandmarksDetectionStrategy
+from .strategy import LandmarksDetectionStrategy
 
 class OpenCVStrategy(LandmarksDetectionStrategy):
     def __init__(self, frame_dimensions=(640, 480), landmark_model_path="/home/eduardonunes/workspace/org_tcc/GSOC2017/data/lbfmodel.yaml"):

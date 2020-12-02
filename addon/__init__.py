@@ -18,11 +18,11 @@ import os
 import bpy
 import importlib
 
-from addon.blender_interface import settings_properties
-from addon.blender_interface import panel_blender
-from addon.blender_interface import face_capture_operator
-from addon.blender_interface import animate_model_from_data_operator
-from addon.blender_interface import face_animation_operator
+from .blender_interface import settings_properties
+from .blender_interface import panel_blender
+from .blender_interface import face_capture_operator
+from .blender_interface import animate_model_from_data_operator
+from .blender_interface import face_animation_operator
 
 importlib.reload(settings_properties)
 importlib.reload(panel_blender)

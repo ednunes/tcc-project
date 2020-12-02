@@ -164,7 +164,6 @@ class FaceCapture():
         cv2.imshow(self.WINDOW_NAME, frame_clone)
 
     def main(self) -> bool:
-        print('ENTROU AQUI NO NOVO')
         checked_frame = True
         if self._video_capture is not None:
             checked_frame, frame = self._video_capture.read()

@@ -9,7 +9,7 @@ class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
     bl_label = "OpenCV Animation Operator"
 
     _timer = None
-    want_to_record_json_data_from_video = False
+    want_to_record_data_from_video = False
     mg = None
 
     def modal(self, context, event):
@@ -43,7 +43,7 @@ class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
         # bpy.app.handlers.frame_change_pre.append(self.stop_playback)
 
         self.mg = manage_animation(context.scene.settings_properties)
-        self.want_to_record_json_data_from_video = (
+        self.want_to_record_data_from_video = (
             context.scene.settings_properties.want_to_export_data and
             context.scene.settings_properties.capture_mode == 'video'
         )
@@ -57,7 +57,7 @@ class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
         return {'RUNNING_MODAL'}
 
     def cancel(self, context):
-        if self.want_to_record_json_data_from_video:
+        if self.want_to_record_data_from_video:
             self.mg.save_data()
 
         context.window_manager.event_timer_remove(self._timer)
