@@ -6,25 +6,10 @@ class ModelAnimation():
     def __init__(self, dimensions=(640, 480)):
         self.width = dimensions[0]
         self.height = dimensions[1]
-        self.bones = bpy.data.objects["RIG-Vincent"].pose.bones
+        #self.bones = bpy.data.objects["RIG-Vincent"].pose.bones
+        self.bones = bpy.data.objects["RIG-rain"].pose.bones
 
          # Camera internals
-        self.camera_matrix = numpy.array(
-                                [[self.height, 0.0, self.width/2],
-                                [0.0, self.height, self.height/2],
-                                [0.0, 0.0, 1.0]], dtype = numpy.float32
-                                )
-                                
-        # 3D model points. 
-        self.model_points = numpy.array([
-                                    (0.0, 0.0, 0.0),             # Nose tip
-                                    (0.0, -330.0, -65.0),        # Chin
-                                    (-225.0, 170.0, -135.0),     # Left eye left corner
-                                    (225.0, 170.0, -135.0),      # Right eye right corne
-                                    (-150.0, -150.0, -125.0),    # Left Mouth corner
-                                    (150.0, -150.0, -125.0)      # Right mouth corner
-                                ], dtype = numpy.float32)
-
     def set_head_rotation(self, shape):
         # 2D image points. If you change the image, you need to change vector
         image_points = numpy.array([shape[30],     # Nose tip - 31
@@ -34,23 +19,38 @@ class ModelAnimation():
                                     shape[48],     # Left Mouth corner - 49
                                     shape[54]      # Right mouth corner - 55
                                 ], dtype = numpy.float32)
+        camera_matrix = numpy.array(
+                                [[self.height, 0.0, self.width/2],
+                                [0.0, self.height, self.height/2],
+                                [0.0, 0.0, 1.0]], dtype = numpy.float32
+                                )
+                                
+        # 3D model points. 
+        model_points = numpy.array([
+                                    (0.0, 0.0, 0.0),             # Nose tip
+                                    (0.0, -330.0, -65.0),        # Chin
+                                    (-225.0, 170.0, -135.0),     # Left eye left corner
+                                    (225.0, 170.0, -135.0),      # Right eye right corne
+                                    (-150.0, -150.0, -125.0),    # Left Mouth corner
+                                    (150.0, -150.0, -125.0)      # Right mouth corner
+                                ], dtype = numpy.float32)
+
 
         dist_coeffs = numpy.zeros((4,1)) # Assuming no lens distortion
 
         if hasattr(self, 'rotation_vector'):
-            (success, self.rotation_vector, self.translation_vector) = cv2.solvePnP(self.model_points, 
-                image_points, self.camera_matrix, dist_coeffs, flags=cv2.SOLVEPNP_ITERATIVE, 
+            (success, self.rotation_vector, self.translation_vector) = cv2.solvePnP(model_points, 
+                image_points, camera_matrix, dist_coeffs, flags=cv2.SOLVEPNP_ITERATIVE, 
                 rvec=self.rotation_vector, tvec=self.translation_vector, 
                 useExtrinsicGuess=True)
         else:
-            (success, self.rotation_vector, self.translation_vector) = cv2.solvePnP(self.model_points, 
-                image_points, self.camera_matrix, dist_coeffs, flags=cv2.SOLVEPNP_ITERATIVE, 
+            (success, self.rotation_vector, self.translation_vector) = cv2.solvePnP(model_points, 
+                image_points, camera_matrix, dist_coeffs, flags=cv2.SOLVEPNP_ITERATIVE, 
                 useExtrinsicGuess=False)
      
         if not hasattr(self, 'first_angle'):
             self.first_angle = numpy.copy(self.rotation_vector)
 
-    def set_head_position(self):
         self.bones["head_fk"].rotation_euler[0] = self.smooth_value("h_x", 5, (self.rotation_vector[0] - self.first_angle[0])) / 1   # Up/Down
         self.bones["head_fk"].rotation_euler[2] = self.smooth_value("h_y", 5, -(self.rotation_vector[1] - self.first_angle[1])) / 1.5  # Rotate
         self.bones["head_fk"].rotation_euler[1] = self.smooth_value("h_z", 5, (self.rotation_vector[2] - self.first_angle[2])) / 1.3   # Left/Right
@@ -84,17 +84,30 @@ class ModelAnimation():
 
     def set_animation(self, shape):
         #self.set_head_rotation(shape) 
-        self.set_mouth_position(shape) 
-
-        # self.set_head_position()
+        #self.set_mouth_position(shape) 
+        self.set_mouth_position_rain(shape) 
 
         # self.set_eyebrows_position(shape) 
 
         # self.set_eyelids_position(shape)
 
+    def set_mouth_position_rain(self, shape):
+        distance = (shape[62] - shape[66])[1]
+
+        if abs(distance) > 12:
+            self.bones["MSTR-Jaw"].rotation_euler = (0.29698485136032104, -5.720967449773795e-11, -9.295835212697057e-10)
+        else:
+            self.bones["MSTR-Jaw"].rotation_euler = (0,0,0)
+        #self.bones["MSTR-Jaw"].keyframe_insert(data_path="rotation_euler", index=-1)
+
     def set_mouth_position(self, shape):
-        self.bones["mouth_ctrl"].location[2] = self.smooth_value("m_h", 2, -self.get_range("mouth_height", numpy.linalg.norm(shape[62] - shape[66])) * 0.06 )
-        self.bones["mouth_ctrl"].location[0] = self.smooth_value("m_w", 2, (self.get_range("mouth_width", numpy.linalg.norm(shape[54] - shape[48])) - 0.5) * -0.04)
+        mouth_height = (-self.get_range("mouth_height", numpy.linalg.norm(shape[62] - shape[66])) * 0.06)
+        self.bones["mouth_ctrl"].location[2] = self.smooth_value("m_h", 2, mouth_height)
+        mouth_width = ((self.get_range("mouth_width", numpy.linalg.norm(shape[54] - shape[48])) - 0.5) * -0.04)
+        self.bones["mouth_ctrl"].location[0] = self.smooth_value("m_w", 2, mouth_width)
+
+        print('HEIGHT', mouth_height, 'SHAPE', shape[62], shape[66])
+        print('WIDTH', mouth_width, 'SHAPE', shape[54], shape[48])
         
         self.bones["mouth_ctrl"].keyframe_insert(data_path="location", index=-1)
 
