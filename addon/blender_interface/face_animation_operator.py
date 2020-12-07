@@ -3,10 +3,8 @@ from addon.manage_animation import manage_animation
 
 
 class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
-    """Operator which runs its self from a timer"""
-    # TODO change name of opencv_operator
-    bl_idname = "wm.opencv_operator"
-    bl_label = "OpenCV Animation Operator"
+    bl_label = "Face Animation Operator"
+    bl_idname = "wm.face_animation_operator"
 
     _timer = None
     want_to_record_data_from_video = False
@@ -17,16 +15,21 @@ class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
             self.cancel(context)
             return {'CANCELLED'}
 
-        # TODO Remove o try except
         if event.type == 'TIMER':
-            try:
-                has_frame = self.mg.main()
-                if not has_frame:
-                    raise NameError('Frame is None')
-            except Exception as e:
-                self.cancel(context)
-                print('ERROR', str(e))
+            has_frame = self.mg.main()
+            if not has_frame:
+                print("Frame is None")
                 return {'CANCELLED'}
+
+            # Debug mode
+            # try:
+            #     has_frame = self.mg.main()
+            #     if not has_frame:
+            #         raise NameError('Frame is None')
+            # except Exception as e:
+            #     self.cancel(context)
+            #     print('ERROR', str(e))
+            #     return {'CANCELLED'}
 
         if event.type == 'R' and event.value == 'PRESS':
             self.mg.recording = not self.mg.recording
@@ -47,11 +50,12 @@ class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
             context.scene.settings_properties.want_to_export_data and
             context.scene.settings_properties.capture_mode == 'video'
         )
+
         self.mg.init_camera()
 
         wm = context.window_manager
-        ''' 0.033 = 30 fps '''
-        self._timer = wm.event_timer_add(0.033, window=context.window)
+        FPS = 1/30 # 30 fps
+        self._timer = wm.event_timer_add(FPS, window=context.window)
         wm.modal_handler_add(self)
 
         return {'RUNNING_MODAL'}

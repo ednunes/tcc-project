@@ -1,16 +1,17 @@
 import cv2
 
 
-def returnCameraIndexes() -> list:
-    # checks the first 10 indexes.
-    a = []
+def return_camera_indexes() -> list:
+    # Checks the first 10 valid indexes
+    available_devices = []
     for i in range(10):
-        cap = cv2.VideoCapture(i)
-        if cap.read()[0]:
-            a.append(i)
-            cap.release()
-    return a
+        video_capture = cv2.VideoCapture(i)
+        if video_capture.read()[0]:
+            available_devices.append(i)
+            video_capture.release()
+    return available_devices
 
 
 if __name__ == "__main__":
-    returnCameraIndexes()
+    available_devices = return_camera_indexes()
+    print("The index of available devices:", available_devices)

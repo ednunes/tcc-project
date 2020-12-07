@@ -96,7 +96,7 @@ class SettingsProperties(bpy.types.PropertyGroup):
         soft_min=1
     )
 
-    # TODO fazer com que a lista de items seja pego atraves de um arquivo de conf
+    # TODO get the items list from a file
     landmarks_algorithm_option: bpy.props.EnumProperty(
         name="Algorithm",
         description="Landmarks algorithms options",

@@ -20,22 +20,22 @@ import importlib
 
 from .blender_interface import settings_properties
 from .blender_interface import panel_blender
-from .blender_interface import face_capture_operator
+from .blender_interface import check_settings_data_operator
 from .blender_interface import animate_model_from_data_operator
 from .blender_interface import face_animation_operator
 
 importlib.reload(settings_properties)
 importlib.reload(panel_blender)
-importlib.reload(face_capture_operator)
+importlib.reload(check_settings_data_operator)
 importlib.reload(face_animation_operator)
 
 CLASSES = [
     settings_properties.SettingsProperties,
     panel_blender.ADDONNAME_PT_subpanel_face_capture,
     panel_blender.ADDONNAME_PT_subpanel_animate_model,
-    face_capture_operator.ADDONNAME_OT_fcoperator,
+    face_animation_operator.ADDONNAME_OT_face_animation_operator,
     animate_model_from_data_operator.ADDONNAME_OT_animate_model_operator,
-    face_animation_operator.ADDONNAME_OT_face_animation_operator
+    check_settings_data_operator.ADDONNAME_OT_check_settings_data_operator
 ]
 
 

@@ -4,7 +4,7 @@ import numpy as np
 import time
 
 from addon.model_animation import ModelAnimation
-from addon.algorithms.strategy import LandmarksDetectionStrategy
+from addon.algorithms.detection_strategy import LandmarksDetectionStrategy
 
 
 class FaceCapture():
@@ -34,9 +34,10 @@ class FaceCapture():
                  landmarks_detection_strategy: LandmarksDetectionStrategy,
                  settings={}) -> None:
         self._landmarks_detection_strategy = landmarks_detection_strategy
-        self._recording = False
         self.model_animation = ModelAnimation()
-        if len(settings) != 0:
+        self._recording = False
+
+        if not settings:
             self.settings = settings
 
     def init_camera(self) -> None:

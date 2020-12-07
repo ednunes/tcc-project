@@ -5,7 +5,7 @@ import imutils
 import dlib
 import cv2
 
-from .strategy import LandmarksDetectionStrategy
+from .detection_strategy import LandmarksDetectionStrategy
 from typing import List
 
 

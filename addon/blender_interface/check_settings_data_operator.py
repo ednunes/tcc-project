@@ -2,7 +2,7 @@ import bpy
 import cv2
 
 
-class ADDONNAME_OT_fcoperator(bpy.types.Operator):
+class ADDONNAME_OT_check_settings_data_operator(bpy.types.Operator):
     bl_label = "Start face capture"
     bl_idname = "addonname.addonname_operator"
 
@@ -52,6 +52,6 @@ class ADDONNAME_OT_fcoperator(bpy.types.Operator):
             self.report({"ERROR"}, "Device or video not available.")
 
         if not has_error:
-            bpy.ops.wm.opencv_operator()
+            bpy.ops.wm.face_animation_operator()
 
         return {"FINISHED"}

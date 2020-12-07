@@ -30,16 +30,15 @@ landmarks_algorithm_params = (
 )
 
 # Algorithm instance
-#algorithm = DlibOpenCVStrategy(*landmarks_algorithm_params)
+# algorithm = DlibOpenCVStrategy(*landmarks_algorithm_params)
 algorithm = OpenCVStrategy(*landmarks_algorithm_params)
 
-def normalize_landmark(landmarks):
+def normalize_landmark(landmarks: np.ndarray) -> np.ndarray:
     center = np.mean(landmarks, axis=0)
-    # print('CENTER', center)
     landmarks_norm = landmarks - center
     return landmarks_norm + 200
 
-def draw_landmarks(frame, shape):
+def draw_landmarks(frame: np.ndarray, shape: np.ndarray) -> None:
     for (x, y) in shape:
         cv2.circle(frame, (round(x), round(y)), 2, (0, 255, 255), -1)
 
@@ -47,8 +46,9 @@ def draw_landmarks(frame, shape):
 la = np.array([0,0])
 ll = np.array([0,0])
 
-def smooth_shapes(shape)
-    s = (ll + la + shape) / 3
+def smooth_shapes(shape: np.ndarray) -> np.ndarray:
+    global ll, la
+    s = (shape + ll + la) / 3
     s = s.astype(int)
     ll = la 
     la = shape
