@@ -1,5 +1,5 @@
-from .panel_blender import  ADDONNAME_PT_subpanel_face_capture, ADDONNAME_PT_subpanel_animate_model
+from .panel_blender import  CRIVEL_PT_subpanel_face_capture, CRIVEL_PT_subpanel_animate_model
 from .settings_properties import SettingsProperties 
-from .check_settings_data_operator import ADDONNAME_OT_check_settings_data_operator
-from .animate_model_from_data_operator import ADDONNAME_OT_animate_model_operator 
-from .face_animation_operator import ADDONNAME_OT_face_animation_operator 
+from .check_settings_data_operator import CRIVEL_OT_check_settings_data_operator
+from .animate_model_from_data_operator import CRIVEL_OT_animate_model_operator 
+from .face_animation_operator import CRIVEL_OT_face_animation_operator 

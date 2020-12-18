@@ -1,21 +1,21 @@
 import bpy
 
 
-class ADDONNAME_PT_main_panel:
+class CRIVEL_PT_main_panel:
     bl_label = "Face capture panel"
-    bl_idname = "ADDONNAME_PT_main_panel"
+    bl_idname = "CRIVEL_PT_main_panel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = "ADDONNAME Addon"
+    bl_category = "CRIVEL Addon"
 
     @classmethod
     def poll(cls, context):
         return (context.object is not None)
 
 
-class ADDONNAME_PT_subpanel_animate_model(
-        ADDONNAME_PT_main_panel, bpy.types.Panel):
-    bl_idname = "ADDONNAME_PT_subpanel_animate_model"
+class CRIVEL_PT_subpanel_animate_model(
+        CRIVEL_PT_main_panel, bpy.types.Panel):
+    bl_idname = "CRIVEL_PT_subpanel_animate_model"
     bl_label = "Animate from data"
 
     def draw(self, context):
@@ -25,13 +25,13 @@ class ADDONNAME_PT_subpanel_animate_model(
         layout.prop(settings, 'number_of_fps', text="Number of FPS")
         layout.prop(settings, 'input_data_path', text="Input data")
 
-        layout.operator("addonname.animate_model_operator",
+        layout.operator("crivel.animate_model_operator",
                         icon='RENDER_ANIMATION')
 
 
-class ADDONNAME_PT_subpanel_face_capture(
-        ADDONNAME_PT_main_panel, bpy.types.Panel):
-    bl_idname = "ADDONNAME_PT_subpanel_face_capture"
+class CRIVEL_PT_subpanel_face_capture(
+        CRIVEL_PT_main_panel, bpy.types.Panel):
+    bl_idname = "CRIVEL_PT_subpanel_face_capture"
     bl_label = "Face capture"
 
     def draw(self, context):
@@ -78,5 +78,5 @@ class ADDONNAME_PT_subpanel_face_capture(
         landmark_layout.prop(
             settings, 'character_name', text="Character name")
 
-        layout.operator("addonname.addonname_operator",
+        layout.operator("crivel.check_settings_data_operator",
                         icon='RENDER_ANIMATION')

@@ -5,14 +5,15 @@ from addon.manage_animation import get_character
 from addon.utils.import_data import import_data 
 
 
-class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
+class CRIVEL_OT_animate_model_operator(bpy.types.Operator):
     bl_label = "Animate from data"
-    bl_idname = "addonname.animate_model_operator"
+    bl_idname = "crivel.animate_model_operator"
 
     character_animation = None
     shape_index = 0
     shapes_len = 0
     input_data_path = ""
+    character_name = "RIG-Vincent"
 
     data = {}
     fps = 30
@@ -33,7 +34,7 @@ class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
             else:
                 self.shapes_len = len(self.data)
 
-                self.character_animation = get_character('vincent')
+                self.character_animation = get_character(self.character_name)
 
                 wm = context.window_manager
                 self._timer = wm.event_timer_add((1/self.fps), window=context.window)
@@ -64,6 +65,7 @@ class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
         )
         self.input_data_path = settings.input_data_path
         self.fps = settings.number_of_fps
+        self.character_name= settings.character_name
         self.execute(context)
         return {'RUNNING_MODAL'}
 

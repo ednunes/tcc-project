@@ -2,9 +2,9 @@ import bpy
 import cv2
 
 
-class ADDONNAME_OT_check_settings_data_operator(bpy.types.Operator):
+class CRIVEL_OT_check_settings_data_operator(bpy.types.Operator):
     bl_label = "Start face capture"
-    bl_idname = "addonname.addonname_operator"
+    bl_idname = "crivel.check_settings_data_operator"
 
     def is_device_available(self, device_id=0):
         if device_id.isdigit():

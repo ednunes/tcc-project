@@ -2,7 +2,7 @@ import bpy
 from addon.manage_animation import manage_animation
 
 
-class ADDONNAME_OT_face_animation_operator(bpy.types.Operator):
+class CRIVEL_OT_face_animation_operator(bpy.types.Operator):
     bl_label = "Face Animation Operator"
     bl_idname = "wm.face_animation_operator"
 
