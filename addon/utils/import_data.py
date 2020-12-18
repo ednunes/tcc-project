@@ -10,4 +10,5 @@ def import_data(input_path: str) -> list:
         ).read()
 
         json_data = json.loads(data)
-    return json_data['shapes']
+        return json_data['shapes']
+    return data

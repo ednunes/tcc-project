@@ -21,13 +21,13 @@ class SettingsProperties(bpy.types.PropertyGroup):
         name="Width:",
         description="Window display width",
         default=DEFAULT_WIDTH,
-        soft_min=0
+        soft_min=1
     )
     window_height: bpy.props.IntProperty(
         name="Height:",
         description="Window display height",
         default=DEFAULT_HEIGHT,
-        soft_min=0
+        soft_min=1
     )
     want_to_record: bpy.props.BoolProperty(
         name="Export webcam video",
@@ -94,6 +94,15 @@ class SettingsProperties(bpy.types.PropertyGroup):
         description="Number of frames per second",
         default=30,
         soft_min=1
+    )
+    character_name: bpy.props.EnumProperty(
+        name="Character name",
+        description="Character name to bones access",
+        default="RIG-Vincent",
+        items=[
+            ("RIG-Vincent", "Vincent", ""),
+            ("RIG-rain", "Rain", "")
+        ]
     )
 
     # TODO get the items list from a file

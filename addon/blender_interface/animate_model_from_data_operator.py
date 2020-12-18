@@ -1,7 +1,7 @@
 import bpy
 import time
 import numpy as np
-from addon.model_animation import ModelAnimation
+from addon.manage_animation import get_character 
 from addon.utils.import_data import import_data 
 
 
@@ -9,9 +9,10 @@ class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
     bl_label = "Animate from data"
     bl_idname = "addonname.animate_model_operator"
 
-    model_animation = None
+    character_animation = None
     shape_index = 0
     shapes_len = 0
+    input_data_path = ""
 
     data = {}
     fps = 30
@@ -23,11 +24,20 @@ class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
 
     def execute(self, context):
         # bpy.app.handlers.frame_change_pre.append(self.stop_playback)
-        self.model_animation = ModelAnimation()
+        if len(self.input_data_path) == 0:
+            self.report({"ERROR"}, "Please insert a input data")
+        else:
+            self.data = import_data(self.input_data_path)
+            if len(self.data) == 0:
+                self.report({"ERROR"}, "Please insert a valid input data")
+            else:
+                self.shapes_len = len(self.data)
 
-        wm = context.window_manager
-        self._timer = wm.event_timer_add((1/self.fps), window=context.window)
-        wm.modal_handler_add(self)
+                self.character_animation = get_character('vincent')
+
+                wm = context.window_manager
+                self._timer = wm.event_timer_add((1/self.fps), window=context.window)
+                wm.modal_handler_add(self)
 
         return {'FINISHED'}
 
@@ -41,9 +51,9 @@ class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
             dtype=np.float32
         )
 
-        self.model_animation.set_animation(nd_shape)
+        self.character_animation.set_animation(nd_shape)
         self.shape_index += 1
-        print("TIME: %.4f sec" % (time.time() - time_start))
+        # print("TIME: %.4f sec" % (time.time() - time_start))
 
         return {'RUNNING_MODAL'}
 
@@ -52,10 +62,8 @@ class ADDONNAME_OT_animate_model_operator(bpy.types.Operator):
         settings.input_data_path = bpy.path.abspath(
             settings.input_data_path
         )
+        self.input_data_path = settings.input_data_path
         self.fps = settings.number_of_fps
-        self.data = import_data(settings.input_data_path)
-        self.shapes_len = len(self.data)
-
         self.execute(context)
         return {'RUNNING_MODAL'}
 

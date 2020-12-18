@@ -3,7 +3,7 @@ import codecs
 import numpy as np
 import time
 
-from addon.model_animation import ModelAnimation
+from addon.characters import CharacterAnimation
 from addon.algorithms.detection_strategy import LandmarksDetectionStrategy
 
 
@@ -12,7 +12,7 @@ class FaceCapture():
     shapes = []
     frames = []
 
-    model_animation = None
+    _character_animation = None
 
     _video_capture = None
 
@@ -32,12 +32,13 @@ class FaceCapture():
 
     def __init__(self,
                  landmarks_detection_strategy: LandmarksDetectionStrategy,
+                 character_animation: CharacterAnimation,
                  settings={}) -> None:
         self._landmarks_detection_strategy = landmarks_detection_strategy
-        self.model_animation = ModelAnimation()
+        self._character_animation = character_animation 
         self._recording = False
-
-        if not settings:
+        
+        if settings:
             self.settings = settings
 
     def init_camera(self) -> None:
@@ -81,6 +82,17 @@ class FaceCapture():
                                      ) -> None:
         self._landmarks_detection_strategy = land_strategy
 
+    @property
+    def character_animation(self) -> CharacterAnimation:
+        return self._character_animation
+
+    @character_animation.setter
+    def character_animation(self, character: CharacterAnimation) -> None:
+        self._character_animation = character
+
+    def set_animation(self, shape: np.ndarray) -> None:
+        self._character_animation.set_animation(shape)
+
     def get_face_landmarks(self, frame: np.ndarray) -> np.ndarray:
         return self._landmarks_detection_strategy.get_face_landmarks(frame)
 
@@ -89,16 +101,19 @@ class FaceCapture():
                    video_dimensions: tuple,
                    frames: np.ndarray) -> None:
 
+        FPS = 30
         video_output = cv2.VideoWriter(
             output_video,
             cv2.VideoWriter_fourcc(*"MJPG"),
-            60,
+            FPS,
             video_dimensions
         )
-
+        
+        SECONDS = 1/FPS
         for frame in frames:
             resized_frame = cv2.resize(frame, video_dimensions)
             video_output.write(resized_frame)
+            time.sleep(SECONDS)
 
         video_output.release()
         video_output = None
@@ -140,7 +155,7 @@ class FaceCapture():
         shape = self.get_face_landmarks(frame)
 
         if shape is not None:
-            self.model_animation.set_animation(shape)
+            self.character_animation.set_animation(shape)
             if self.settings["want_to_export_data"]:
                 self.shapes.append(shape)
 
@@ -156,7 +171,7 @@ class FaceCapture():
         shape = self.get_face_landmarks(frame_clone)
 
         if shape is not None:
-            self.model_animation.set_animation(shape)
+            self.character_animation.set_animation(shape)
             if self.settings["want_to_export_data"] and self.recording:
                 self.shapes.append(shape)
 
@@ -173,11 +188,11 @@ class FaceCapture():
                 if self.settings["capture_mode"] == "camera":
                     time_start = time.time()
                     self.main_camera(frame)
-                    print("TIME CAMERA: %.4f sec" % (time.time() - time_start))
+                    #print("TIME CAMERA: %.4f sec" % (time.time() - time_start))
                 else:
                     time_start = time.time()
                     self.main_video(frame)
-                    print("TIME VIDEO: %.4f sec" % (time.time() - time_start))
+                    #print("TIME VIDEO: %.4f sec" % (time.time() - time_start))
             else:
                 checked_frame = False
 

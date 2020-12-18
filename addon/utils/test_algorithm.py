@@ -30,8 +30,8 @@ landmarks_algorithm_params = (
 )
 
 # Algorithm instance
-# algorithm = DlibOpenCVStrategy(*landmarks_algorithm_params)
-algorithm = OpenCVStrategy(*landmarks_algorithm_params)
+algorithm = DlibOpenCVStrategy(*landmarks_algorithm_params)
+#algorithm = OpenCVStrategy(*landmarks_algorithm_params)
 
 def normalize_landmark(landmarks: np.ndarray) -> np.ndarray:
     center = np.mean(landmarks, axis=0)
@@ -61,7 +61,7 @@ while(video_capture is not None and video_capture.isOpened()):
     shape = algorithm.get_face_landmarks(frame)
 
     # Show image captured with landmarks draw
-    cv2.imshow("Read face from json", frame)
+    cv2.imshow("Read face from camera", frame)
 
     result = np.zeros((500, 500, 3), np.uint8)
     smooth = np.zeros((500, 500, 3), np.uint8)

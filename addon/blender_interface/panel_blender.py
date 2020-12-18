@@ -75,6 +75,8 @@ class ADDONNAME_PT_subpanel_face_capture(
             settings, 'landmarks_algorithm_option', text="Algorithm")
         landmark_layout.prop(
             settings, 'landmarks_model_path', text="Model path")
+        landmark_layout.prop(
+            settings, 'character_name', text="Character name")
 
         layout.operator("addonname.addonname_operator",
                         icon='RENDER_ANIMATION')

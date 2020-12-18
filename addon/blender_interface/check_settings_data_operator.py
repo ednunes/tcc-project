@@ -47,6 +47,12 @@ class ADDONNAME_OT_check_settings_data_operator(bpy.types.Operator):
             has_error = True
             self.report({"ERROR"}, "Please select a landmark model path")
 
+        try:
+            bpy.data.objects[settings.character_name].pose.bones
+        except:
+            has_error = True
+            self.report({"ERROR"}, "Please insert a character that is in the scene")
+
         if not self.is_device_available(settings.capture_device_result):
             has_error = True
             self.report({"ERROR"}, "Device or video not available.")

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 import numpy as np
-import json
+import json, codecs
 
 class LandmarksDetectionStrategy(ABC):
     @abstractmethod

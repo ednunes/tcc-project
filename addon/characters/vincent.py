@@ -1,15 +1,16 @@
 import bpy
 import cv2
 import numpy
+from .character_animation import CharacterAnimation 
 
-class ModelAnimation():
+
+class VincentModel(CharacterAnimation):
     def __init__(self, dimensions=(640, 480)):
         self.width = dimensions[0]
         self.height = dimensions[1]
-        #self.bones = bpy.data.objects["RIG-Vincent"].pose.bones
-        self.bones = bpy.data.objects["RIG-rain"].pose.bones
+        self.bones = bpy.data.objects["RIG-Vincent"].pose.bones
 
-         # Camera internals
+    # Camera internals
     def set_head_rotation(self, shape):
         # 2D image points. If you change the image, you need to change vector
         image_points = numpy.array([shape[30],     # Nose tip - 31
@@ -84,21 +85,11 @@ class ModelAnimation():
 
     def set_animation(self, shape):
         #self.set_head_rotation(shape) 
-        #self.set_mouth_position(shape) 
-        self.set_mouth_position_rain(shape) 
+        self.set_mouth_position(shape) 
 
         # self.set_eyebrows_position(shape) 
 
         # self.set_eyelids_position(shape)
-
-    def set_mouth_position_rain(self, shape):
-        distance = (shape[62] - shape[66])[1]
-
-        if abs(distance) > 12:
-            self.bones["MSTR-Jaw"].rotation_euler = (0.29698485136032104, -5.720967449773795e-11, -9.295835212697057e-10)
-        else:
-            self.bones["MSTR-Jaw"].rotation_euler = (0,0,0)
-        #self.bones["MSTR-Jaw"].keyframe_insert(data_path="rotation_euler", index=-1)
 
     def set_mouth_position(self, shape):
         mouth_height = (-self.get_range("mouth_height", numpy.linalg.norm(shape[62] - shape[66])) * 0.06)
@@ -106,9 +97,6 @@ class ModelAnimation():
         mouth_width = ((self.get_range("mouth_width", numpy.linalg.norm(shape[54] - shape[48])) - 0.5) * -0.04)
         self.bones["mouth_ctrl"].location[0] = self.smooth_value("m_w", 2, mouth_width)
 
-        print('HEIGHT', mouth_height, 'SHAPE', shape[62], shape[66])
-        print('WIDTH', mouth_width, 'SHAPE', shape[54], shape[48])
-        
         self.bones["mouth_ctrl"].keyframe_insert(data_path="location", index=-1)
 
     # Keeps a moving average of given length
@@ -139,4 +127,3 @@ class ModelAnimation():
             return (value - self.range[name][0]) / val_range
         else:
             return 0.0
-
